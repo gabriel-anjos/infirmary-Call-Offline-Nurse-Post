@@ -25,7 +25,6 @@ WiFiClient wifiClient;
 // BearSSL::X509List cert(cacert);
 // BearSSL::X509List client_crt(client_cert);
 // BearSSL::PrivateKey key(privkey);
-//String thing_ref = "EmergencyCall";
 int Posto_ref = 1;
 
 PubSubClient client(wifiClient);
@@ -51,7 +50,6 @@ time_t nowish = 1510592825;
 
 #define AWS_IOT_SUBSCRIBE_TOPIC "EmergencyCall_PostoEnfermagem/1"
 
-//#define AWS_IOT_PUBLISH_TOPIC "EmergencyCall_RecoverState"
 
 void NTPConnect()
 {
@@ -88,16 +86,7 @@ void messageReceived(char *topic, byte *payload, unsigned int length)
     globalPayload = ids;
     ids = "";
 }
-// void recoverState()
-// {
-//     StaticJsonDocument<512> doc;
-//     doc["postoRef"] = Posto_ref;
-//     doc["thingRef"] = thing_ref;
-//     char jsonBuffer[700];
-//     serializeJson(doc, jsonBuffer);
-//     client.publish(AWS_IOT_PUBLISH_TOPIC, jsonBuffer);
-//     Serial.println(jsonBuffer);
-// }
+
 
 void connectWifi()
 {
@@ -128,13 +117,9 @@ void connectBroker()
             if (!client.subscribe(AWS_IOT_SUBSCRIBE_TOPIC))
                 Serial.println(client.state());
             //recoverState();
-            //digitalWrite(conectLed, LOW);
-           // delay(500);
         }
         else
         {
-            //delay(500);
-           // digitalWrite(conectLed, LOW);
             Serial.println("client foi desconectado!! ");
             Serial.print("failed, reason -> ");
             client.disconnect();
@@ -229,8 +214,6 @@ void setup()
     Serial.begin(115200);
     client.setServer(MQTT_HOST, 1883);
     client.setCallback(messageReceived);
-   // net.setTrustAnchors(&cert);
-    //net.setClientRSACert(&client_crt, &key);
     connectWifi();
     NTPConnect();
     pinMode(conectLed, OUTPUT);
